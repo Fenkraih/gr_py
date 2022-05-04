@@ -5,6 +5,14 @@ import matplotlib.pyplot as plt
 from numpy import sqrt, pi, cos, sin, size, linspace, outer, ones, array, arccos, arctan2
 
 
+def eq_plane_grid(steps):
+    karth_plane = []
+    karth_kugel = []
+    for kk in range(steps):
+        karth_plane.append([10, 0, (-0.05 + 0.1 * kk / steps)])
+
+    return karth_plane
+
 def sph_make(ax):
     """
     visual to print a 3d sphere on a plt plot
@@ -62,10 +70,15 @@ def square_to_polar_grid(steps):
     karth_kugel = []
     sph_kugel = []
 
-    for kk in range(steps+1):
-        karth_quadrat.append([50, (-0.5 + 1 * kk / steps), (-0.5)])
-        for ll in range(steps):
-            karth_quadrat.append([50, (-0.5 + 1 * kk / steps), (-0.5 + 1 * ll / steps)])
+    if False:
+        for kk in range(steps+1):
+            karth_quadrat.append([10, (-0.1 + 0.2 * kk / steps), (-0.1)])
+            for ll in range(steps):
+                karth_quadrat.append([10, (-0.1 + 0.2 * kk / steps), (-0.1 + 0.2 * ll / steps)])
+
+    if True:
+        for kk in range(steps+1):
+            karth_quadrat.append([10, 0, (-0.1 + 0.2 * kk / steps)])
 
     for elements in karth_quadrat:
         length = sqrt(elements[0] ** 2 + elements[1] ** 2 + elements[2] ** 2)
@@ -76,7 +89,7 @@ def square_to_polar_grid(steps):
         yy = elements[1]
         zz = elements[2]
         # spiegelung an x=-0.1
-        xx = -xx - 0.2 - 29.9
+        #xx = -xx - 0.2 - 29.9
         rr = sqrt(xx ** 2 + yy ** 2 + zz ** 2)
         theta = arccos(zz / rr)
         phi = arctan2(yy, xx)

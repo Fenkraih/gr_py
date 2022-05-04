@@ -28,10 +28,11 @@ def runge_kutta_4_forward(init_vel, init_pos, steps, params, delta):
     move_flag = 1
 
     for kk in range(steps):
-        if abs(init_pos[1]) < naked_singularity + 0.3:
-            move_flag = 0
-            print("Teilchen stürzt auf nackte Singularität zu ... breche ab")
-            break
+        if False:
+            if abs(init_pos[1]) < naked_singularity + 0.3:
+                move_flag = 0
+                print("Teilchen stürzt auf nackte Singularität zu ... breche ab")
+                break
 
         r_pos.append(init_pos[1].copy())
         theta_pos.append(init_pos[2].copy())

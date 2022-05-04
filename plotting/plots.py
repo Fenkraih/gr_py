@@ -57,14 +57,18 @@ def window():
 
 
 def plot_folder(seed_folder, params, dist, show_or_not):
-    csv_loc = seed_folder + "\\csvs_full"
+    csv_loc = seed_folder + "/csvs_full/"
     csv_names = os.listdir(csv_loc)
     quad_param_d, mass_d = params
-    r_anzeige = 1.5 * dist
+    r_anzeige = 1.1 * dist
     ax = plt.axes(projection='3d')
-    ax.set_xlim([-r_anzeige, r_anzeige])
+    ax.set_xlim([-r_anzeige ,r_anzeige])
     ax.set_ylim([-r_anzeige, r_anzeige])
-    ax.set_zlim([-r_anzeige,r_anzeige])
+    ax.set_zlim([-r_anzeige, r_anzeige])
+
+    #ax.set_ylim([-1, 1])
+    #ax.set_zlim([-1, 1])
+
 
     for elements in csv_names:
         filename = os.path.join(csv_loc,elements)
@@ -78,7 +82,8 @@ def plot_folder(seed_folder, params, dist, show_or_not):
         ax.plot3D(xx, yy, zz, "b-")
     ax.legend()
     sph_make(ax)
-    plt.savefig(seed_folder + "\\figs\\" + f"dist_{dist}_complete_q_{quad_param_d}.png")
+    print(seed_folder + "/figs/" + f"dist_{dist}_complete.png")
+    plt.savefig(seed_folder + "/figs/" + f"dist_{dist}_complete.png")
     if show_or_not:
         plt.show()
     plt.close()

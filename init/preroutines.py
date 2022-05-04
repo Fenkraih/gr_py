@@ -14,9 +14,9 @@ def init_calculation(mass, quad_param, ort, gesch):
     now = datetime.now()
     dt_string = now.strftime("%d-%m-%H-%M-%S-%f")
 
-    seed_folder = "D:\\gr_py\\data\\" + f"data_{dt_string}"
+    seed_folder = "/home/altin/gr_py/data/" + f"data_{dt_string}"
     make_these_dirs(seed_folder)
-    with open(seed_folder + "\\inits\\" + f"{dt_string}_repr.csv", "w") as csv_file:
+    with open(seed_folder + "/inits/" + f"{dt_string}_repr.csv", "w") as csv_file:
         csv_writer = csv.DictWriter(csv_file, fieldnames=["date", "qq", "init_ort", "init_vel", "mass"])
         csv_writer.writeheader()
         info = {
@@ -32,8 +32,8 @@ def init_calculation(mass, quad_param, ort, gesch):
 
 
 def data_make(pos, vel, seed_folder, params, steps, forward_backward, delta):
-    csv_loc = seed_folder + "\\csvs_full\\"
-    aborted_loc = seed_folder + "\\csvs_aborted\\"
+    csv_loc = seed_folder + "/csvs_full/"
+    aborted_loc = seed_folder + "/csvs_aborted/"
 
     now_obj = datetime.now()
     dt_string = now_obj.strftime("%d-%m-%H-%M-%S-%f")
@@ -58,7 +58,7 @@ def prep_tr(pos, vel, params, steps,  dt_string, forward_backward, csv_loc, abor
 
 def make_these_dirs(seed_folder):
     os.mkdir(seed_folder)
-    os.mkdir(seed_folder + "\\inits")
-    os.mkdir(seed_folder + "\\csvs_full")
-    os.mkdir(seed_folder + "\\csvs_aborted")
-    os.mkdir(seed_folder + "\\figs")
+    os.mkdir(seed_folder + "/inits")
+    os.mkdir(seed_folder + "/csvs_full")
+    os.mkdir(seed_folder + "/csvs_aborted")
+    os.mkdir(seed_folder + "/figs")

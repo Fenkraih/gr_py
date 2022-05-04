@@ -5,7 +5,7 @@ def plot_shadow(asoc_points_on_square, light_or_dark, seed_folder):
     x_coord = []
     y_coord = []
     z_coord = []
-    for elements in asoc_points_on_square:
+    for count, elements in enumerate(asoc_points_on_square):
         x_coord.append(elements[0])
         y_coord.append(elements[1])
         z_coord.append(elements[2])
@@ -15,4 +15,4 @@ def plot_shadow(asoc_points_on_square, light_or_dark, seed_folder):
             plt.plot(y_coord[kk], z_coord[kk], "b+")
         if light_or_dark[kk]==0:
             plt.plot(y_coord[kk], z_coord[kk], "k+")
-    plt.savefig(seed_folder + "\\figs\\" + f"computed_shadow.png")
+    plt.savefig(seed_folder + "/figs/" + "computed_shadow.png")

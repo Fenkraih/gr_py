@@ -19,13 +19,13 @@ def geodesic(dt_string, position, velocity, steps, params, csv_loc, aborted_loc,
     :return:
     """
     quad_param, mass = params
-    filename = csv_loc + f"{dt_string}_q_{quad_param}.csv"
-    file_replace = aborted_loc + f"{dt_string}_q_{quad_param}.csv"
+    filename = csv_loc + f"{dt_string}.csv"
+    file_replace = aborted_loc + f"{dt_string}.csv"
     trajectory, move_flag = runge_kutta_4_forward(velocity, position, steps, params, delta)
     df = pd.DataFrame(data=trajectory)
     df.to_csv(filename, index=False)
-    if move_flag == 0:
-        os.replace(filename, file_replace)
+    #if move_flag == 0:
+    #    os.replace(filename, file_replace)
     return move_flag
 
 
@@ -43,8 +43,8 @@ def backward_raytrace(dt_string, position, velocity, steps, params, csv_loc,
     :return:
     """
     quad_param, mass = params
-    filename = csv_loc + f"{dt_string}_q_{quad_param}.csv"
-    file_replace = aborted_loc + f"{dt_string}_q_{quad_param}.csv"
+    filename = csv_loc + f"{dt_string}.csv"
+    file_replace = aborted_loc + f"{dt_string}.csv"
     trajectory, move_flag = runge_kutta_4_backward(velocity, position, steps, params, delta)
     df = pd.DataFrame(data=trajectory)
     df.to_csv(filename, index=False)
