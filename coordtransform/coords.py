@@ -13,9 +13,9 @@ def sph_to_karth(geschw):
     """
     geschw_karth = []
     for elements in geschw:
-        xx = elements[0] * cos(elements[2]) * sin(elements[1])
-        yy = elements[0] * sin(elements[2]) * sin(elements[1])
-        zz = elements[0] * cos(elements[1])
+        xx = elements[0] * cos(elements[1]) * sin(elements[2])
+        yy = elements[0] * sin(elements[1]) * sin(elements[2])
+        zz = elements[0] * cos(elements[2])
         geschw_karth.append([xx, yy, zz])
     return [xx, yy, zz]
 

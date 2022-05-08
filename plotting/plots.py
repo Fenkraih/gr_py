@@ -69,6 +69,21 @@ def plot_folder(seed_folder, params, dist, show_or_not):
     #ax.set_ylim([-1, 1])
     #ax.set_zlim([-1, 1])
 
+    # for elements in csv_names:
+    #     filename = os.path.join(csv_loc,elements)
+    #     df = pd.read_csv(filename).head(100)
+    #     rr = df.loc[0,:]
+    #     phi = df.loc[2,:]
+    #     theta = df.loc[1,:]
+    #     xx = rr * cos(phi) * sin(theta)
+    #     yy = rr * sin(phi) * sin(theta)
+    #     zz = rr * cos(theta)
+    #     ax.plot3D(xx, yy, zz, "b-")
+    # ax.legend()
+    # sph_make(ax)
+    # # print(seed_folder + "/figs/" + f"dist_{dist}_initial.png")
+    # plt.savefig(seed_folder + "/figs/" + f"dist_{dist}_initial.png")
+
 
     for elements in csv_names:
         filename = os.path.join(csv_loc,elements)
