@@ -24,13 +24,12 @@ def geodesic(dt_string, position, velocity, steps, params, csv_loc, aborted_loc,
     trajectory, move_flag = runge_kutta_4_forward(velocity, position, steps, params, delta)
     df = pd.DataFrame(data=trajectory)
     df.to_csv(filename, index=False)
-    #if move_flag == 0:
-    #    os.replace(filename, file_replace)
+    if move_flag == 0:
+        os.replace(filename, file_replace)
     return move_flag
 
 
-def backward_raytrace(dt_string, position, velocity, steps, params, csv_loc,
-                      aborted_loc, delta):
+def backward_raytrace(dt_string, position, velocity, steps, params, csv_loc, aborted_loc, delta):
     """
 
     :param velocity:

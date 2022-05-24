@@ -28,7 +28,7 @@ def runge_kutta_4_forward(init_vel, init_pos, steps, params, delta):
     move_flag = 1
 
     for kk in range(steps):
-        if False:
+        if True:
             if abs(init_pos[1]) < naked_singularity + 0.3:
                 move_flag = 0
                 print("Teilchen stürzt auf nackte Singularität zu ... breche ab")
@@ -106,8 +106,8 @@ def runge_kutta_4_backward(init_vel, init_pos, steps, params, delta):
         yn_k4 = init_vel + delta * accel(yn + delta * yn_k3, init_vel + delta * fn_k3, params)
         fn_k4 = accel(yn + delta * yn_k3, init_vel + delta * fn_k3, params)
 
-        new_pos = init_pos - delta / 6 * (yn_k1 + yn_k2 + yn_k3 + yn_k4)
-        new_velocity = init_vel - delta / 6 * (fn_k1 + fn_k2 + fn_k3 + fn_k4)
+        new_pos = init_pos - delta / 6 * (yn_k1 + 2 * yn_k2 + 2 * yn_k3 + yn_k4)
+        new_velocity = init_vel - delta / 6 * (fn_k1 + 2 * fn_k2 + 2 * fn_k3 + fn_k4)
 
         init_pos = new_pos
         init_vel = new_velocity
