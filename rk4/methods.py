@@ -90,9 +90,9 @@ def runge_kutta_4_backward(init_vel, init_pos, steps, params, delta):
             move_flag = 0
             print("Teilchen stürzt auf nackte Singularität zu ... breche ab")
             break
-        r_pos.append(init_pos[1].copy())
-        theta_pos.append(init_pos[2].copy())
-        phi_pos.append(init_pos[3].copy())
+        r_pos.append(init_pos[1])
+        theta_pos.append(init_pos[2])
+        phi_pos.append(init_pos[3])
 
         yn_k1 = init_vel
         fn_k1 = accel(yn, fn, params)
@@ -116,4 +116,52 @@ def runge_kutta_4_backward(init_vel, init_pos, steps, params, delta):
     trajectory.append(theta_pos)
     trajectory.append(phi_pos)
 
+    return array(trajectory), move_flag
+
+
+def euler_forward(vel, pos, steps, params, delta):
+    quad_param, mass = params
+    naked_singularity = 2 * mass + 0.3
+    move_flag = 1
+    trajectory = []
+    r_pos = []
+    theta_pos = []
+    phi_pos = []
+    for kk in range(steps):
+        if abs(pos[1]) < naked_singularity:
+            print("Teilchen stürzt auf nackte Singularität zu ... breche ab")
+            move_flag = 0
+            break
+        r_pos.append(pos[1])
+        theta_pos.append(pos[2])
+        phi_pos.append(pos[3])
+        pos = pos + delta*vel
+        vel = vel + accel(pos, vel, params) * delta
+    trajectory.append(r_pos)
+    trajectory.append(theta_pos)
+    trajectory.append(phi_pos)
+    return array(trajectory), move_flag
+
+
+def euler_backward(vel, pos, steps, params, delta):
+    quad_param, mass = params
+    naked_singularity = 2 * mass + 0.3
+    move_flag = 1
+    trajectory = []
+    r_pos = []
+    theta_pos = []
+    phi_pos = []
+    for kk in range(steps):
+        if abs(pos[1]) < naked_singularity:
+            print("Teilchen stürzt auf nackte Singularität zu ... breche ab")
+            move_flag = 0
+            break
+        r_pos.append(pos[1])
+        theta_pos.append(pos[2])
+        phi_pos.append(pos[3])
+        pos = pos - delta*vel
+        vel = vel - accel(pos, vel, params) * delta
+    trajectory.append(r_pos)
+    trajectory.append(theta_pos)
+    trajectory.append(phi_pos)
     return array(trajectory), move_flag

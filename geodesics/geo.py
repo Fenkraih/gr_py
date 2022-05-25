@@ -3,7 +3,7 @@ Core geodesic calculation routine using RK4 forward calculation
 """
 import os
 import pandas as pd
-from rk4.methods import runge_kutta_4_forward, runge_kutta_4_backward
+from rk4.methods import runge_kutta_4_forward, runge_kutta_4_backward, euler_backward, euler_forward
 
 
 def geodesic(dt_string, position, velocity, steps, params, csv_loc, aborted_loc, delta):
@@ -21,7 +21,8 @@ def geodesic(dt_string, position, velocity, steps, params, csv_loc, aborted_loc,
     quad_param, mass = params
     filename = csv_loc + f"{dt_string}.csv"
     file_replace = aborted_loc + f"{dt_string}.csv"
-    trajectory, move_flag = runge_kutta_4_forward(velocity, position, steps, params, delta)
+    # trajectory, move_flag = runge_kutta_4_forward(velocity, position, steps, params, delta)
+    trajectory, move_flag = euler_forward(velocity, position, steps, params, delta)
     df = pd.DataFrame(data=trajectory)
     df.to_csv(filename, index=False)
     if move_flag == 0:
@@ -44,7 +45,8 @@ def backward_raytrace(dt_string, position, velocity, steps, params, csv_loc, abo
     quad_param, mass = params
     filename = csv_loc + f"{dt_string}.csv"
     file_replace = aborted_loc + f"{dt_string}.csv"
-    trajectory, move_flag = runge_kutta_4_backward(velocity, position, steps, params, delta)
+    # trajectory, move_flag = runge_kutta_4_backward(velocity, position, steps, params, delta)
+    trajectory, move_flag = euler_backward(velocity, position, steps, params, delta)
     df = pd.DataFrame(data=trajectory)
     df.to_csv(filename, index=False)
     if move_flag == 0:

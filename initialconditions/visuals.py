@@ -7,9 +7,8 @@ from numpy import sqrt, pi, cos, sin, size, linspace, outer, ones, array, arccos
 
 def eq_plane_grid(steps):
     karth_plane = []
-    karth_kugel = []
     for kk in range(steps):
-        karth_plane.append([10, 0, (-0.05 + 0.1 * kk / steps)])
+        karth_plane.append([10, 0, (-0.1 + 0.2 * kk / steps)])
 
     return karth_plane
 
