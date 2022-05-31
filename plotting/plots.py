@@ -63,10 +63,10 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
     csv_names = os.listdir(csv_loc)
     shadow_csv = os.listdir(shadow_loc)
     quad_param_d, mass_d = params
-    phi_low = around(angles[2] * (360 /(2*pi)))
-    phi_up = around(angles[3] * (360 /(2*pi)))
-    the_low = around(angles[0] * (360 /(2*pi)))
-    the_up = around(angles[1] * (360 /(2*pi)))
+    phi_low = around(angles[2] * (360 /(2*pi)), decimals=4)
+    phi_up = around(angles[3] * (360 /(2*pi)), decimals=4)
+    the_low = around(angles[0] * (360 /(2*pi)), decimals=4)
+    the_up = around(angles[1] * (360 /(2*pi)), decimals=4)
     r_anzeige = 1.1 * dist
     if d_plot:
         ax = plt.axes(projection='3d')

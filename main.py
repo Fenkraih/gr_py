@@ -46,7 +46,7 @@ def main(mass, distance, quad_param, steps, grid_steps, delta):
 
 if __name__ == '__main__':
     # main(1, 50, 1, 600, 11, .5)   # angles = [pi/2, pi/2 , 120/360 * pi, 240/360 * pi]  # example
-    main(1, 50, 1, 2000, 50, .05)
+    main(1, 50, 1, 2500, 50, .05)
     #main(1, 50, 1, 2000, 1)
     #main(1, 50, 0.5, 2000, 1)
     #main(1, 50, 0.75, 2000, 1)
