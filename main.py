@@ -6,7 +6,7 @@ from plotting import plot_folder
 from initialconditions import lin_comb, eq_plane_grid
 
 
-def main(mass, distance, quad_param, steps, grid_steps, delta):
+def main(mass, distance, quad_param, steps, grid_steps, delta, angles=None):
     start = time.time()
     forward_backward = "backward"
     ort = [0, distance, pi/2, pi]                                                  # t r theta phi
@@ -17,7 +17,7 @@ def main(mass, distance, quad_param, steps, grid_steps, delta):
         angles = [pi/2, pi/2, 250/360 * 2 * pi, 290/360 * 2 * pi]                     # sample for phi raster mit const theta
     else:
         # angles = [pi / 2, pi / 2, 50 / 360 * 2 * pi, 80 / 360 * 2 * pi]
-        angles = [pi/2, pi/2, 78.245 / 360 * 2 * pi, 78.246 / 360 * 2 * pi]         # problematische darstellung:
+        angles = [pi/2, pi/2, 78.245 / 360 * 2 * pi, 78.246 / 360 * 2 * pi]
         # photonen kommen näher ran als die photonensphäre
         # angles = [pi/2, pi/2, 0 / 360 * 2 * pi, 5 / 360 * 2 * pi]                   # für photonensphären und der
         # gleichen
@@ -31,7 +31,7 @@ def main(mass, distance, quad_param, steps, grid_steps, delta):
         move_flag = data_make(ort, gesch, seed_folder, [quad_param, mass], steps, forward_backward, delta)
         light_or_dark.append(move_flag)
     plot_folder(seed_folder, angles, ort, [quad_param, mass], distance,
-                show_or_not=True, print_black_geodesics=True, d_plot=False)
+                show_or_not=True, print_black_geodesics=True, d_plot=False, zoom_plot=True)
     plot_shadow(asoc_points_on_square, light_or_dark, seed_folder)
     print(time.time() - start)
 
