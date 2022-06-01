@@ -103,6 +103,11 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
         ax.set_title(f"r = {dist} M= {mass_d} q= {quad_param_d} ϕ = [{phi_low}, {phi_up}] θ = [{the_low}, {the_up}]" )
         ax.set_xlim([-r_anzeige, r_anzeige])
         ax.set_ylim([-r_anzeige, r_anzeige])
+        axins = ax.inset_axes([0.7, 0.5, 0.25, 0.25])
+        x1, x2, y1, y2 = -.11, .11, 4.95, 5.05
+        axins.set_xlim(x1, x2)
+        axins.set_ylim(y1, y2)
+        ax.indicate_inset_zoom(axins, edgecolor="black")
 
         for elements in csv_names:
             filename = os.path.join(csv_loc, elements)
@@ -113,6 +118,7 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
             xx = rr * cos(phi) * sin(theta)
             yy = rr * sin(phi) * sin(theta)
             ax.plot(xx, yy, "b-", label="Light")
+            axins.plot(xx, yy, "b-", label="Light")
         if print_black_geodesics:
             for elements in shadow_csv:
                 filename = os.path.join(shadow_loc, elements)
@@ -123,6 +129,7 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
                 xx = rr * cos(phi) * sin(theta)
                 yy = rr * sin(phi) * sin(theta)
                 ax.plot(xx, yy, "k-", label="Shadow")
+                axins.plot(xx, yy, "k-", label="Shadow")
         black_patch = mpatches.Patch(color='black', label='Shadow geodesics')
         blue_patch = mpatches.Patch(color='blue', label='Light geodesics')
         ax.set_xlabel("c=G=M=1")
