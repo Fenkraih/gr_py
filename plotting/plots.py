@@ -65,8 +65,8 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
     quad_param_d, mass_d = params
     phi_low = around(angles[2] * (360 /(2*pi)), decimals=4)
     phi_up = around(angles[3] * (360 /(2*pi)), decimals=4)
-    the_low = around(angles[0] * (360 /(2*pi)), decimals=4)
-    the_up = around(angles[1] * (360 /(2*pi)), decimals=4)
+    the_low = around(angles[0] * (180 /(pi)), decimals=4)
+    the_up = around(angles[1] * (180 /(pi)), decimals=4)
     r_anzeige = 1.1 * dist
     if d_plot:
         ax = plt.axes(projection='3d')
@@ -104,7 +104,7 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
         ax.set_xlim([-r_anzeige, r_anzeige])
         ax.set_ylim([-r_anzeige, r_anzeige])
         axins = ax.inset_axes([0.7, 0.5, 0.25, 0.25])
-        x1, x2, y1, y2 = -.11, .11, 4.95, 5.05
+        x1, x2, y1, y2 = -.1, .1, 4.9, 5.1
         if zoom_plot:
             axins.set_xlim(x1, x2)
             axins.set_ylim(y1, y2)
