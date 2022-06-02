@@ -5,11 +5,39 @@ import matplotlib.pyplot as plt
 from numpy import sqrt, pi, cos, sin, size, linspace, outer, ones, array, arccos, arctan2, arcsin
 
 def angle_calc(mass, quad_param, distance):
-    syng_angle = arcsin(sqrt(mass**2 * (2*quad_param + 3)**2 *(1/distance**2)*((2*quad_param + 3)*(distance-2*mass)/((2*quad_param+1)*distance))**(2*quad_param+1)))* 180 * (pi)**(-1)
+    if quad_param == -0.5:
+        syng_angle = arcsin(sqrt(mass**2 * (2*quad_param + 3)**2 *(1/distance**2)))* 180 * (pi)**(-1)
+    else:
+        syng_angle = arcsin(sqrt(mass**2 * (2*quad_param + 3)**2 *(1/distance**2)*((2*quad_param + 3)*(distance-2*mass)/((2*quad_param+1)*distance))**(2*quad_param+1)))* 180 * (pi)**(-1)
     schwarzschild_angle = arcsin(sqrt((27*(2*mass)**2*(distance-2*mass))/(4*distance**3)))* 180 * (pi)**(-1)
     print(f"Outer shadow angle in equatorial plane q-metric: {syng_angle}")
     print(f"Outer shadow angle in equatorial plane schwarzschild: {schwarzschild_angle}")   
     return syng_angle, schwarzschild_angle
+
+def example_angles():
+    print("q=1")
+    syng_angle,schwarzschild_angle  = angle_calc(1, 1, 50)
+    print("q=0.5")
+    syng_angle,schwarzschild_angle  = angle_calc(1, .5, 50)
+    print("q=0.1")
+    syng_angle,schwarzschild_angle  = angle_calc(1, .1, 50)
+    print("q=0")
+    syng_angle,schwarzschild_angle  = angle_calc(1, 0, 50)
+    print("q=-0.4")
+    syng_angle,schwarzschild_angle  = angle_calc(1, -.4, 50)
+    print("q=-0.49")
+    syng_angle,schwarzschild_angle  = angle_calc(1, -.49, 50)
+    print("q=-0.5")
+    syng_angle,schwarzschild_angle  = angle_calc(1, -.5, 50)
+    print("q=-0.75")
+    syng_angle,schwarzschild_angle  = angle_calc(1, -.75, 50)
+    print("q=-1.0")
+    syng_angle,schwarzschild_angle  = angle_calc(1, -1.0, 50)
+    print("q=-1.4")
+    syng_angle,schwarzschild_angle  = angle_calc(1, -1.4, 50)
+    print("q=-1.49")
+    syng_angle,schwarzschild_angle  = angle_calc(1, -1.49, 50)
+
 
 def eq_plane_grid(steps):
     karth_plane = []

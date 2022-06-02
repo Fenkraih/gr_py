@@ -104,7 +104,7 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
         ax.set_xlim([-r_anzeige, r_anzeige])
         ax.set_ylim([-r_anzeige, r_anzeige])
         axins = ax.inset_axes([0.7, 0.5, 0.25, 0.25])
-        x1, x2, y1, y2 = -.1, .1, 4.9, 5.1
+        x1, x2, y1, y2 = -.1, .1, 2*quad_param_d + 3*mass_d - 0.1, 2*quad_param_d + 3*mass_d + 0.1
         if zoom_plot:
             axins.set_xlim(x1, x2)
             axins.set_ylim(y1, y2)
