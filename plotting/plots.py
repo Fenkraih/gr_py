@@ -20,9 +20,9 @@ class FolderClass(QMainWindow):
         self.setWindowTitle('Anwendung')
 
     def select_folder(self):
-        shadow_loc = QFileDialog.getExistingDirectory(self, "Select shadow_folder")
-        aborted_folder = os.path.join(shadow_loc, "csvs_aborted")
-        full_folder = os.path.join(shadow_loc, "csvs_full")
+        parent_folder = QFileDialog.getExistingDirectory(self, "Select shadow_folder")
+        aborted_folder = os.path.join(parent_folder, "csvs_aborted")
+        full_folder = os.path.join(parent_folder, "csvs_full")
         list_aborted = os.listdir(aborted_folder)
         list_full = os.listdir(full_folder)
         complete_list = (list_full + list_aborted).sort()
@@ -144,6 +144,58 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
     if show_or_not:
         plt.show()
     plt.close()
+
+
+def subfolders(parent_folder):
+    shadow_loc = os.path.join(parent_folder, "csvs_aborted")
+    csv_loc = os.path.join(parent_folder, "csvs_full")
+    csv_names = os.listdir(csv_loc)
+    shadow_csv = os.listdir(shadow_loc)
+    return shadow_csv, csv_names, shadow_loc, csv_loc
+
+
+def simpler_plot(ax, parent_folder, quad, shadow_angle):
+    shadow_csv, csv_names, shadow_loc, csv_loc = subfolders(parent_folder)
+    mass = 1
+    r_anzeige = 50
+    ax.set_xlim([-r_anzeige, r_anzeige])
+    ax.set_ylim([-r_anzeige, r_anzeige])
+    ax.set_title(f"q = {quad}, α = {around(shadow_angle,3)}")
+    axins = ax.inset_axes([0.65, 0.65, 0.25, 0.25])
+    x1, x2, y1, y2 = -.1, .1, 2 * quad + 3 * mass - 0.1, 2 * quad + 3 * mass + 0.1
+    axins.set_xlim(x1, x2)
+    axins.set_ylim(y1, y2)
+    ax.indicate_inset_zoom(axins, edgecolor="black")
+
+    for elements in csv_names:
+        filename = os.path.join(csv_loc, elements)
+        df = pd.read_csv(filename)
+        rr = df.loc[0, :]
+        phi = df.loc[2, :]
+        theta = df.loc[1, :]
+        xx = rr * cos(phi) * sin(theta)
+        yy = rr * sin(phi) * sin(theta)
+        ax.plot(xx, yy, "b-", label="Light")
+        axins.plot(xx, yy, "b-", label="Light")
+    for elements in shadow_csv:
+        filename = os.path.join(shadow_loc, elements)
+        df = pd.read_csv(filename)
+        rr = df.loc[0, :]
+        phi = df.loc[2, :]
+        theta = df.loc[1, :]
+        xx = rr * cos(phi) * sin(theta)
+        yy = rr * sin(phi) * sin(theta)
+        ax.plot(xx, yy, "k-", label="Shadow")
+        axins.plot(xx, yy, "k-", label="Shadow")
+
+
+def multi_plot(parent_folders, quad_list, shadow_list):
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(18, 5))
+    axis_objects = [ax[0, 0], ax[0, 1], ax[1, 0], ax[1, 1]]
+    for num, parent_folder in enumerate(parent_folders):
+        simpler_plot(axis_objects[num], parent_folder, quad_list[num], shadow_list[num])
+    plt.tight_layout()
+    plt.savefig(parent_folders[-1] + "/figs/" + f"q_compare.png")
 
 
 if __name__ == '__main__':

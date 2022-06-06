@@ -4,39 +4,58 @@ visuals for the initial condition stuff
 import matplotlib.pyplot as plt
 from numpy import sqrt, pi, cos, sin, size, linspace, outer, ones, array, arccos, arctan2, arcsin
 
-def angle_calc(mass, quad_param, distance):
+
+def angle_calc(mass, quad_param, distance, grid_steps):
     if quad_param == -0.5:
-        syng_angle = arcsin(sqrt(mass**2 * (2*quad_param + 3)**2 *(1/distance**2)))* 180 * (pi)**(-1)
+        syng_angle = arcsin(sqrt(mass ** 2 * (2 * quad_param + 3) ** 2 * (1 / distance ** 2))) * 180 * pi ** (-1)
     else:
-        syng_angle = arcsin(sqrt(mass**2 * (2*quad_param + 3)**2 *(1/distance**2)*((2*quad_param + 3)*(distance-2*mass)/((2*quad_param+1)*distance))**(2*quad_param+1)))* 180 * (pi)**(-1)
-    schwarzschild_angle = arcsin(sqrt((27*(2*mass)**2*(distance-2*mass))/(4*distance**3)))* 180 * (pi)**(-1)
-    print(f"Outer shadow angle in equatorial plane q-metric: {syng_angle}")
-    print(f"Outer shadow angle in equatorial plane schwarzschild: {schwarzschild_angle}")   
-    return syng_angle, schwarzschild_angle
+        syng_angle = arcsin(sqrt(mass ** 2 * (2 * quad_param + 3) ** 2 * (1 / distance ** 2) * (
+                    (2 * quad_param + 3) * (distance - 2 * mass) / ((2 * quad_param + 1) * distance)) ** (
+                                             2 * quad_param + 1))) * 180 * pi ** (-1)
+    schwarzschild_angle = arcsin(sqrt((27 * (2 * mass) ** 2 * (distance - 2 * mass)) / (4 * distance ** 3))) * 180 * (
+        pi) ** (-1)
+    print(f"Outer shadow angle in equatorial plane (q= {quad_param})-metric: {syng_angle}")
+    angle_intervall = .005
+    lower_phi_angle = 90 - syng_angle - angle_intervall
+    high_phi_angle = 90 - syng_angle + angle_intervall
+    angle_steps = (lower_phi_angle - high_phi_angle) / grid_steps
+    return lower_phi_angle, high_phi_angle, angle_steps
+
+
+def shadow_angle_calc(lower_phi_angle, light_or_dark, angle_steps):
+    shadow_angle = lower_phi_angle
+    for number in light_or_dark:
+        if number == 1:
+            shadow_angle += angle_steps
+    shadow_angle += 0.5 * angle_steps
+    shadow_angle = 90 - shadow_angle
+    print(f"Numerical value of shadow angle: {shadow_angle}")
+    return shadow_angle
+
 
 def example_angles():
     print("q=1")
-    syng_angle,schwarzschild_angle  = angle_calc(1, 1, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, 1, 50)
     print("q=0.5")
-    syng_angle,schwarzschild_angle  = angle_calc(1, .5, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, .5, 50)
     print("q=0.1")
-    syng_angle,schwarzschild_angle  = angle_calc(1, .1, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, .1, 50)
     print("q=0")
-    syng_angle,schwarzschild_angle  = angle_calc(1, 0, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, 0, 50)
     print("q=-0.4")
-    syng_angle,schwarzschild_angle  = angle_calc(1, -.4, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, -.4, 50)
     print("q=-0.49")
-    syng_angle,schwarzschild_angle  = angle_calc(1, -.49, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, -.49, 50)
     print("q=-0.5")
-    syng_angle,schwarzschild_angle  = angle_calc(1, -.5, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, -.5, 50)
     print("q=-0.75")
-    syng_angle,schwarzschild_angle  = angle_calc(1, -.75, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, -.75, 50)
     print("q=-1.0")
-    syng_angle,schwarzschild_angle  = angle_calc(1, -1.0, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, -1.0, 50)
     print("q=-1.4")
-    syng_angle,schwarzschild_angle  = angle_calc(1, -1.4, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, -1.4, 50)
     print("q=-1.49")
-    syng_angle,schwarzschild_angle  = angle_calc(1, -1.49, 50)
+    syng_angle, schwarzschild_angle = angle_calc(1, -1.49, 50)
 
 
 def eq_plane_grid(steps):
@@ -46,6 +65,14 @@ def eq_plane_grid(steps):
 
     return karth_plane
 
+
+def example_angle_selection(forward_backward):
+    if forward_backward == "forward":
+        angles = [pi / 2, pi / 2, 250 / 360 * 2 * pi, 290 / 360 * 2 * pi]  # sample for phi raster mit const theta
+    else:
+        angles = [pi / 2, pi / 2, 78.315 / 360 * 2 * pi, 78.318 / 360 * 2 * pi]
+
+
 def sph_make(ax):
     """
     visual to print a 3d sphere on a plt plot
@@ -54,11 +81,11 @@ def sph_make(ax):
     """
     coefs_1 = (0.8, 0.8, 0.8)
     rx_1, ry_1, rz_1 = 1 / sqrt(coefs_1)
-    rz_1 = 1/(rx_1*ry_1)
+    rz_1 = 1 / (rx_1 * ry_1)
 
     # Make data
     u_space = linspace(0, 2 * pi, 100)
-    v_space= linspace(0, pi, 100)
+    v_space = linspace(0, pi, 100)
 
     x_space = rx_1 * outer(cos(u_space), sin(v_space))
     y_space = ry_1 * outer(sin(u_space), sin(v_space))
@@ -76,9 +103,10 @@ def square_to_polar_grid_v2(steps, distance, width):
     sph_kugel = []
 
     for kk in range(steps):
-        karth_quadrat.append([-distance, (-1 * width + 2*width * kk / steps), -1 * width])
+        karth_quadrat.append([-distance, (-1 * width + 2 * width * kk / steps), -1 * width])
         for ll in range(steps):
-            karth_quadrat.append([-distance, (-1 * width + 2*width * kk / steps), (-1 * width + 2*width * ll / steps)])
+            karth_quadrat.append(
+                [-distance, (-1 * width + 2 * width * kk / steps), (-1 * width + 2 * width * ll / steps)])
 
     for elements in karth_quadrat:
         length = sqrt(elements[0] ** 2 + elements[1] ** 2 + elements[2] ** 2)
@@ -94,9 +122,10 @@ def square_to_polar_grid_v2(steps, distance, width):
             rr = sqrt(xx ** 2 + yy ** 2 + zz ** 2)
             theta = arccos(zz / rr)
             phi = arctan2(yy, xx)
-            sph_kugel.append([rr,theta,phi])
+            sph_kugel.append([rr, theta, phi])
 
     return karth_quadrat, sph_kugel, karth_kugel
+
 
 def square_to_polar_grid(steps):
     karth_quadrat = []
@@ -104,13 +133,13 @@ def square_to_polar_grid(steps):
     sph_kugel = []
 
     if False:
-        for kk in range(steps+1):
+        for kk in range(steps + 1):
             karth_quadrat.append([10, (-0.1 + 0.2 * kk / steps), (-0.1)])
             for ll in range(steps):
                 karth_quadrat.append([10, (-0.1 + 0.2 * kk / steps), (-0.1 + 0.2 * ll / steps)])
 
     if True:
-        for kk in range(steps+1):
+        for kk in range(steps + 1):
             karth_quadrat.append([10, 0, (-0.1 + 0.2 * kk / steps)])
 
     for elements in karth_quadrat:
@@ -122,11 +151,11 @@ def square_to_polar_grid(steps):
         yy = elements[1]
         zz = elements[2]
         # spiegelung an x=-0.1
-        #xx = -xx - 0.2 - 29.9
+        # xx = -xx - 0.2 - 29.9
         rr = sqrt(xx ** 2 + yy ** 2 + zz ** 2)
         theta = arccos(zz / rr)
         phi = arctan2(yy, xx)
-        sph_kugel.append([rr,theta,phi])
+        sph_kugel.append([rr, theta, phi])
 
     return karth_quadrat, sph_kugel, karth_kugel
 
@@ -155,7 +184,7 @@ def sph_to_karth(geschw):
         xx = elements[0] * cos(elements[2]) * sin(elements[1])
         yy = elements[0] * sin(elements[2]) * sin(elements[1])
         zz = elements[0] * cos(elements[1])
-        geschw_karth.append([xx,yy,zz])
+        geschw_karth.append([xx, yy, zz])
     return geschw_karth
 
 
