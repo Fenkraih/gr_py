@@ -6,7 +6,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from numpy import sin, cos, pi, around
+from numpy import sin, cos, pi, around, linspace, sqrt
 from PyQt5.QtWidgets import QFileDialog, QApplication, QMainWindow
 from initialconditions.visuals import sph_make
 
@@ -103,12 +103,31 @@ def plane_chooser(xx, yy, zz, plane="equatorial"):
     return pl_ax_1, pl_ax_2
 
 
+def photon_sphere_indicate(quad_param_d, mass_d, ax):
+    equatorial_photon_sphere = (2 * quad_param_d + 3) * mass_d
+    xval = linspace(-equatorial_photon_sphere, equatorial_photon_sphere)
+    yval = sqrt(equatorial_photon_sphere**2-xval**2)
+    ax.plot(xval, yval, "r")
+    ax.plot(xval, -yval, "r")
+
+
+def plot_equatorial_surface_line(ax):
+    surface = 2.3
+    xval = linspace(-surface, surface)
+    yval = sqrt(surface**2-xval**2)
+    ax.plot(xval, yval, "c")
+    ax.plot(xval, -yval, "c")
+
+
 def two_d_plotter(dist, mass_d, quad_param_d, phi_low, phi_up, r_anzeige, zoom_plot, csv_names, csv_loc,
                   print_black_geodesics, shadow_csv, shadow_loc, the_low, the_up, seed_folder, show_or_not,
                   plane="equatorial"):
     if plane == "meridional":
         zoom_plot = False
     ax = plt.axes()
+    if plane == "equatorial":
+        photon_sphere_indicate(quad_param_d, mass_d, ax)
+        plot_equatorial_surface_line(ax)
     ax.set_title(f"r = {dist} M= {mass_d} q= {quad_param_d} ϕ = [{phi_low}, {phi_up}] θ = [{the_low}, {the_up}]")
     ax.set_xlim([-r_anzeige, r_anzeige])
     ax.set_ylim([-r_anzeige, r_anzeige])
@@ -132,6 +151,8 @@ def two_d_plotter(dist, mass_d, quad_param_d, phi_low, phi_up, r_anzeige, zoom_p
         ax.plot(pl_ax_1, pl_ax_2, "b-", label="Light")
         if zoom_plot:
             axins.plot(pl_ax_1, pl_ax_2, "b-", label="Light")
+            if plane == "equatorial":
+                photon_sphere_indicate(quad_param_d, mass_d, axins)
     if print_black_geodesics:
         for elements in shadow_csv:
             filename = os.path.join(shadow_loc, elements)
@@ -148,8 +169,13 @@ def two_d_plotter(dist, mass_d, quad_param_d, phi_low, phi_up, r_anzeige, zoom_p
                 axins.plot(pl_ax_1, pl_ax_2, "k-", label="Shadow")
     black_patch = mpatches.Patch(color='black', label='Shadow geodesics')
     blue_patch = mpatches.Patch(color='blue', label='Light geodesics')
+    red_patch = mpatches.Patch(color='red', label='photon circle')
+    cyan_patch = mpatches.Patch(color='cyan', label='body surface')
     ax.set_xlabel("c=G=M=1")
-    ax.legend(handles=[blue_patch, black_patch])
+    if plane == "equatorial":
+        ax.legend(handles=[blue_patch, black_patch, red_patch, cyan_patch])
+    else:
+        ax.legend(handles=[blue_patch, black_patch])
     print(seed_folder + "/figs/" + f"dist_{dist}_complete.png")
     plt.savefig(seed_folder + "/figs/" + f"dist_{dist}_complete.png")
     if show_or_not:

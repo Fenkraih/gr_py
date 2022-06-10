@@ -46,7 +46,7 @@ def example_equatorial(mass, distance, quad_param, steps, grid_steps, delta, ang
     """
     start = time.time()
     ort = [0, distance, pi / 2, pi]  # t r theta phi
-    lower_phi_angle, higher_phi_angle, angle_steps = angle_calc(mass, quad_param, distance)     # close to the shadow
+    lower_phi_angle, higher_phi_angle, angle_steps = angle_calc(mass, quad_param, distance, grid_steps)     # close to the shadow
     if angles is None:
         angles = [pi / 2, pi / 2,
                   lower_phi_angle * 2 * pi / 360, higher_phi_angle * 2 * pi / 360]
@@ -126,5 +126,5 @@ def q_compare(mass, distance, quad_list, steps, grid_steps, delta, angles=None, 
 
 if __name__ == '__main__':
     # main(1, 50, 1, 600, 11, .5)   # angles = [pi/2, pi/2 , 120/360 * pi, 240/360 * pi]  # example
-    example_meridional(1, 50, 1, 25000, 50, .005)
+    example_equatorial(1, 50, 1, 25000, 50, .005)
     # q_compare(1, 50, [1, 0.5, 0, -0.25], 100000, 30, .001)

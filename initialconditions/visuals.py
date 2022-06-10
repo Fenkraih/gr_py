@@ -15,7 +15,7 @@ def angle_calc(mass, quad_param, distance, grid_steps):
     schwarzschild_angle = arcsin(sqrt((27 * (2 * mass) ** 2 * (distance - 2 * mass)) / (4 * distance ** 3))) * 180 * (
         pi) ** (-1)
     print(f"Outer shadow angle in equatorial plane (q= {quad_param})-metric: {syng_angle}")
-    angle_intervall = .005
+    angle_intervall = .01
     lower_phi_angle = 90 - syng_angle - angle_intervall
     high_phi_angle = 90 - syng_angle + angle_intervall
     angle_steps = (lower_phi_angle - high_phi_angle) / grid_steps
