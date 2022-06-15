@@ -15,7 +15,7 @@ def angle_calc(mass, quad_param, distance, grid_steps):
     schwarzschild_angle = arcsin(sqrt((27 * (2 * mass) ** 2 * (distance - 2 * mass)) / (4 * distance ** 3))) * 180 * (
         pi) ** (-1)
     print(f"Outer shadow angle in equatorial plane (q= {quad_param})-metric: {syng_angle}")
-    angle_intervall = .01
+    angle_intervall = .0015
     lower_phi_angle = 90 - syng_angle - angle_intervall
     high_phi_angle = 90 - syng_angle + angle_intervall
     angle_steps = (lower_phi_angle - high_phi_angle) / grid_steps
@@ -31,31 +31,6 @@ def shadow_angle_calc(lower_phi_angle, light_or_dark, angle_steps):
     shadow_angle = 90 - shadow_angle
     print(f"Numerical value of shadow angle: {shadow_angle}")
     return shadow_angle
-
-
-def example_angles():
-    print("q=1")
-    syng_angle, schwarzschild_angle = angle_calc(1, 1, 50)
-    print("q=0.5")
-    syng_angle, schwarzschild_angle = angle_calc(1, .5, 50)
-    print("q=0.1")
-    syng_angle, schwarzschild_angle = angle_calc(1, .1, 50)
-    print("q=0")
-    syng_angle, schwarzschild_angle = angle_calc(1, 0, 50)
-    print("q=-0.4")
-    syng_angle, schwarzschild_angle = angle_calc(1, -.4, 50)
-    print("q=-0.49")
-    syng_angle, schwarzschild_angle = angle_calc(1, -.49, 50)
-    print("q=-0.5")
-    syng_angle, schwarzschild_angle = angle_calc(1, -.5, 50)
-    print("q=-0.75")
-    syng_angle, schwarzschild_angle = angle_calc(1, -.75, 50)
-    print("q=-1.0")
-    syng_angle, schwarzschild_angle = angle_calc(1, -1.0, 50)
-    print("q=-1.4")
-    syng_angle, schwarzschild_angle = angle_calc(1, -1.4, 50)
-    print("q=-1.49")
-    syng_angle, schwarzschild_angle = angle_calc(1, -1.49, 50)
 
 
 def eq_plane_grid(steps):

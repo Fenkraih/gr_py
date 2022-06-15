@@ -1,10 +1,11 @@
 """
 core functions of coordinate transforms
 """
-
+from numba import jit
 from numpy import cos, sin, sqrt, arccos, arctan2
 
 
+# @jit(nopython=True)
 def sph_to_karth(geschw):
     """
     takes a list of velocities in spherical coordinates and gives back in cartesian coordinates

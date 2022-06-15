@@ -1,42 +1,34 @@
 """
 Metric methods for computations
 """
-from numpy import sin, cos, tan, array
+from numba import jit
+from numpy import sin, cos, tan, array, zeros, float64
 
 
+# @jit(nopython=True)
 def q_metric(position, params):
     """
     returns the metric
     """
     tt, r, theta, phi = position
     q, M = params
-    g00 = -(1 - 2 * M / r)**(1+q)
-    g11 = (1 - 2 * M / r)**(-q-1) * (1 + (M**2 * sin(theta)**2)/(r**2 - 2*M*r))**(-q*(2+q))
-    g22 = (1 - 2 * M / r)**(-q) * (1 + (M**2 * sin(theta)**2)/(r**2 - 2*M*r))**(-q*(2+q)) * r**2
-    g33 = (1 - 2 * M / r)**(-q) * r ** 2 * sin(theta) ** 2
-    g = [g00, g11, g22, g33]
+    g00 = -(1. - 2. * M / r)**(1+q)
+    g11 = (1. - 2. * M / r)**(-q-1) * (1 + (M**2 * sin(theta)**2)/(r**2 - 2*M*r))**(-q*(2+q))
+    g22 = (1. - 2. * M / r)**(-q) * (1 + (M**2 * sin(theta)**2)/(r**2 - 2*M*r))**(-q*(2+q)) * r**2
+    g33 = (1. - 2. * M / r)**(-q) * r ** 2 * sin(theta) ** 2
+    g = array([float64(g00), g11, g22, g33])
     return g
 
 
+# @jit(nopython=True)
 def christoffel_precalculated(position, params):
     """
     Copy pasted the results of the sympy based gamma() function here to save computation time
     """
     tt, r, theta, phi = position
     q, M = params
-    gam = [[[q*0, q*0, q*0, q*0],
-             [q*0, q*0, q*0, q*0],
-             [q*0, q*0, q*0, q*0],
-             [q*0, q*0, q*0, q*0]], [[q*0, q*0, q*0, q*0],
-                                    [q*0, q*0, q*0, q*0],
-                                    [q*0, q*0, q*0, q*0],
-                                    [q*0, q*0, q*0, q*0]],  [[q*0, q*0, q*0, q*0],
-                                                            [q*0, q*0, q*0, q*0],
-                                                            [q*0, q*0, q*0, q*0],
-                                                            [q*0, q*0, q*0, q*0]],  [[q*0, q*0, q*0, q*0],
-                                                                                    [q*0, q*0, q*0, q*0],
-                                                                                    [q*0, q*0, q*0, q*0],
-                                                                                    [q*0, q*0, q*0, q*0]]]
+    gam = zeros([4, 4, 4])
+
     gam[0][0][1] = -1.0 * M * (q + 1) / (r * (2 * M - r))
     gam[0][1][0] = -1.0 * M * (q + 1) / (r * (2 * M - r))
     gam[1][0][0] = -1.0 * M * (-(2 * M - r) / r) ** (2 * q + 2) * (
@@ -76,6 +68,7 @@ def christoffel_precalculated(position, params):
     return gam
 
 
+# @jit(nopython=True)
 def accel(xx, vv, params):
     """
     Calculates the acceleration via geodesic equation

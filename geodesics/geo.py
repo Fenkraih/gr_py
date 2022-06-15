@@ -45,8 +45,8 @@ def backward_raytrace(dt_string, position, velocity, steps, params, csv_loc, abo
     quad_param, mass = params
     filename = csv_loc + f"{dt_string}.csv"
     file_replace = aborted_loc + f"{dt_string}.csv"
-    # trajectory, move_flag = runge_kutta_4_backward(velocity, position, steps, params, delta)
-    trajectory, move_flag = euler_backward(velocity, position, steps, params, delta)
+    trajectory, move_flag = runge_kutta_4_backward(velocity, position, steps, params, delta)
+    # trajectory, move_flag = euler_backward(velocity, position, steps, params, delta)
     df = pd.DataFrame(data=trajectory)
     df.to_csv(filename, index=False)
     if move_flag == 0:
