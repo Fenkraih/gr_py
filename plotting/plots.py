@@ -58,7 +58,7 @@ def window():
     sys.exit(app.exec_())
 
 
-def three_d_plotter(r_anzeige, csv_names, csv_loc, print_black_geodesics, shadow_csv, shadow_loc):
+def three_d_plotter(r_anzeige, csv_names, csv_loc, print_black_geodesics, shadow_csv, shadow_loc, seed_folder, dist, show_or_not):
     ax = plt.axes(projection='3d')
     ax.set_xlim([-r_anzeige, r_anzeige])
     ax.set_ylim([-r_anzeige, r_anzeige])
@@ -86,7 +86,11 @@ def three_d_plotter(r_anzeige, csv_names, csv_loc, print_black_geodesics, shadow
             yy = rr * sin(phi) * sin(theta)
             zz = rr * cos(theta)
             ax.plot3D(xx, yy, zz, "k-")
+    print(seed_folder + "/figs/" + f"dist_{dist}_complete.png")
+    plt.savefig(seed_folder + "/figs/" + f"dist_{dist}_complete.png")
     ax.legend()
+    if show_or_not:
+        plt.show()
     sph_make(ax)
 
 
@@ -194,9 +198,9 @@ def plot_folder(seed_folder, angles, ort, params, dist, show_or_not, print_black
     phi_up = around(angles[3] * (360 / (2 * pi)), decimals=4)
     the_low = around(angles[0] * (180 / (pi)), decimals=4)
     the_up = around(angles[1] * (180 / (pi)), decimals=4)
-    r_anzeige = 1.1 * dist
+    r_anzeige = 2 * dist
     if d_plot:
-        three_d_plotter(r_anzeige, csv_names, csv_loc, print_black_geodesics, shadow_csv, shadow_loc)
+        three_d_plotter(r_anzeige, csv_names, csv_loc, print_black_geodesics, shadow_csv, shadow_loc, seed_folder, dist, show_or_not)
     else:
         two_d_plotter(dist, mass_d, quad_param_d, phi_low, phi_up, r_anzeige, zoom_plot, csv_names, csv_loc,
                       print_black_geodesics, shadow_csv, shadow_loc, the_low, the_up, seed_folder, show_or_not,

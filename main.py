@@ -1,5 +1,7 @@
+import os
 import time
 from shadows import plot_shadow
+import multiprocessing as mp
 from numpy import pi, sqrt, array, arcsin
 from init import init_calculation, data_make
 from plotting import plot_folder, multi_plot
@@ -26,13 +28,13 @@ def example_meridional(mass, distance, quad_param, steps, grid_steps, delta,
         print(f"{count} out of {len(geschw)}")
         move_flag = data_make(ort, gesch, seed_folder, [quad_param, mass], steps, forward_backward, delta)
         light_or_dark.append(move_flag)
-        upper_angle += (higher_theta_angle-lower_theta_angle) / grid_steps
+        upper_angle += (higher_theta_angle - lower_theta_angle) / grid_steps
         if move_flag == 0:
             doomtimer += 1
         if doomtimer == 2:
             break
     shadow_angle = shadow_angle_calc(lower_theta_angle, light_or_dark,
-                                     (higher_theta_angle-lower_theta_angle) / grid_steps)
+                                     (higher_theta_angle - lower_theta_angle) / grid_steps)
 
     plot_folder(seed_folder, angles, ort, [quad_param, mass], distance,
                 show_or_not=True, print_black_geodesics=True, d_plot=False, zoom_plot=True, plane="meridional")
@@ -46,13 +48,14 @@ def example_equatorial(mass, distance, quad_param, steps, grid_steps, delta, ang
     """
     start = time.time()
     ort = [0, distance, pi / 2, pi]  # t r theta phi
-    lower_phi_angle, higher_phi_angle, angle_steps = angle_calc(mass, quad_param, distance, grid_steps)     # close to the shadow
+    lower_phi_angle, higher_phi_angle, angle_steps = angle_calc(mass, quad_param, distance,
+                                                                grid_steps)  # close to the shadow
     if angles is None:
         angles = [pi / 2, pi / 2,
                   lower_phi_angle * 2 * pi / 360, higher_phi_angle * 2 * pi / 360]
     geschw, asoc_points_on_square = lin_comb(ort, quad_param, mass, angles, grid_steps)
     geschw_2, asoc_points_on_square = lin_comb(ort, quad_param, mass, [pi / 2, pi / 2,
-                  60 * 2 * pi / 360, 90 * 2 * pi / 360], 6)
+                                                                       60 * 2 * pi / 360, 90 * 2 * pi / 360], 6)
     seed_folder = init_calculation(mass, quad_param, ort, geschw[0])
     light_or_dark = []
     doomtimer = 0
@@ -131,12 +134,27 @@ def ray_length_checker(mass, distance, quad_param, steps, grid_steps, delta, ang
     for count, gesch in enumerate(geschw):
         print(f"{count} out of {len(geschw)}")
         move_flag = data_make(ort, gesch, seed_folder, [quad_param, mass], steps, forward_backward, delta)
-        if count==3:
+        if count == 3:
             break
 
     plot_folder(seed_folder, angles, ort, [quad_param, mass], distance,
                 show_or_not=True, print_black_geodesics=True, d_plot=False, zoom_plot=True, plane="equatorial")
     print(time.time() - start)
+
+
+def single_vertical_var_dist(mass, distance, quad_param, steps, grid_steps, delta, seed_folder,
+                             angles=None, forward_backward="backward"):
+    """
+     Plot example geodesic to check if steplength is sufficient
+     """
+    ort = [0, distance, pi / 2, pi]  # t r theta phi
+
+    if angles is None:
+        angles = [0, 0, pi / 2, pi / 2]
+
+    doom_timer = 0
+    gesch, asoc_points_on_square = lin_comb(ort, quad_param, mass, angles, grid_steps)
+    move_flag = data_make(ort, gesch[0], seed_folder, [quad_param, mass], steps, forward_backward, delta)
 
 
 # TODO 1: . Teilchen fliegen sehr weit weg manchmal -> gtt exponential wachstum
@@ -151,7 +169,22 @@ def ray_length_checker(mass, distance, quad_param, steps, grid_steps, delta, ang
 # 34 rk4
 # 6 euler
 if __name__ == '__main__':
-    # main(1, 50, 1, 600, 11, .5)   # angles = [pi/2, pi/2 , 120/360 * pi, 240/360 * pi]  # example
-    ray_length_checker(1.0, 50.0, 1.0, 10**5, 30, 10**(-4))
-    # example_equatorial(1, 50, 1, 125000, 30, .001)
-    # q_compare(1, 50, [1, 0.5, 0, -0.25], 100000, 30, .001)
+    start = time.time()
+    num_processes = os.cpu_count()
+
+    seed_folder = init_calculation(1, .1, [0, 0, 0, 0], [0, 0, 0, 0])
+    for kk in range(20):
+        dist = 3.125
+        stepsize = 0.025/(kk+1)
+        procs = []
+        for ii in range(num_processes):
+            p = mp.Process(target=single_vertical_var_dist,
+                           args=(1.0, dist + 2*stepsize - ii * stepsize, .1, 10 ** 1, 4, 10 ** (-4), seed_folder,))
+            procs.append(p)
+        for p in procs:
+            p.start()
+        for p in procs:
+            p.join()
+        plot_folder(seed_folder, [0, 0, pi / 2, pi / 2], 0, [.1, 1], 3,
+                    show_or_not=False, print_black_geodesics=True, d_plot=True, zoom_plot=False, plane="equatorial")
+    print(time.time() - start)

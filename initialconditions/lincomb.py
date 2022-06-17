@@ -25,6 +25,16 @@ def lin_comb(ort, quad_param, mass, angles, steps):
             square_points.append(.1 / local_coord[0] * local_coord)
             coords.append(local_coord)
 
+    if theta_low == theta_up and phi_low == phi_up:
+        print("Global lock, only one vector possible")
+        sphere = [1.0, theta_low,
+                  phi_low]
+        sph_karth = sph_to_karth([sphere])
+        ay, ax, az = sph_karth
+        local_coord = array([ax * e1[0], ay * e2[1], az * e3[2]])
+        square_points.append(.1 / local_coord[0] * local_coord)
+        coords.append(local_coord)
+
     elif phi_low == phi_up:
         for kk in range(steps + 1):
             sphere = [1.0, theta_low + kk * (theta_up - theta_low) / steps, phi_low]
