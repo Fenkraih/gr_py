@@ -13,7 +13,6 @@ def lin_comb(ort, quad_param, mass, angles, steps):
 
     theta_low, theta_up, phi_low, phi_up = angles
     coords = []
-    square_points = []
 
     if theta_low == theta_up:
         for ll in range(steps + 1):
@@ -21,18 +20,15 @@ def lin_comb(ort, quad_param, mass, angles, steps):
                       phi_low + ll * (phi_up - phi_low) / steps]
             sph_karth = sph_to_karth([sphere])
             ay, ax, az = sph_karth  # eigentlich ax ay az
-            local_coord = array([ax * e1[0], ay * e2[1], az * e3[2]])  # array([[0,1,0], [1,0,0], [0,0,1]])
-            square_points.append(.1 / local_coord[0] * local_coord)
+            local_coord = array([ax * e1[0], ay * e2[1], az * e3[2]])
             coords.append(local_coord)
 
     if theta_low == theta_up and phi_low == phi_up:
-        print("Global lock, only one vector possible")
         sphere = [1.0, theta_low,
                   phi_low]
         sph_karth = sph_to_karth([sphere])
         ay, ax, az = sph_karth
         local_coord = array([ax * e1[0], ay * e2[1], az * e3[2]])
-        square_points.append(.1 / local_coord[0] * local_coord)
         coords.append(local_coord)
 
     elif phi_low == phi_up:
@@ -42,7 +38,6 @@ def lin_comb(ort, quad_param, mass, angles, steps):
             ay, ax, az = sph_karth
             local_coord = array([ax * e1[0], ay * e2[1], az * e3[2]])
             coords.append(local_coord)
-            square_points.append(.1 / local_coord[0] * local_coord)
 
     else:
         for kk in range(steps + 1):
@@ -53,9 +48,8 @@ def lin_comb(ort, quad_param, mass, angles, steps):
                 ay, ax, az = sph_karth
                 local_coord = array([ax * e1[0], ay * e2[1], az * e3[2]])
                 coords.append(local_coord)
-                square_points.append(.1 / local_coord[0] * local_coord)
 
-    return coords, array(square_points)
+    return coords
 
 
 def lin_comb_2():

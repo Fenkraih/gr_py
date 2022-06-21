@@ -2,7 +2,7 @@ import os
 import time
 from shadows import plot_shadow
 import multiprocessing as mp
-from numpy import pi, sqrt, array, arcsin
+from numpy import pi, sqrt, array, arcsin, linspace, set_printoptions
 from init import init_calculation, data_make
 from plotting import plot_folder, multi_plot
 from initialconditions import lin_comb, eq_plane_grid, angle_calc, shadow_angle_calc
@@ -153,9 +153,13 @@ def single_vertical_var_dist(mass, distance, quad_param, steps, grid_steps, delt
         angles = [0, 0, pi / 2, pi / 2]
 
     doom_timer = 0
-    gesch, asoc_points_on_square = lin_comb(ort, quad_param, mass, angles, grid_steps)
+    gesch = lin_comb(ort, quad_param, mass, angles, grid_steps)
     move_flag = data_make(ort, gesch[0], seed_folder, [quad_param, mass], steps, forward_backward, delta)
 
+
+def one_line_printer(seed):
+    plot_folder(seed, [0, 0, pi / 2, pi / 2], 0, [.1, 1], 3,
+                show_or_not=True, print_black_geodesics=True, d_plot=False, zoom_plot=True, plane="meridional")
 
 # TODO 1: . Teilchen fliegen sehr weit weg manchmal -> gtt exponential wachstum
 #       untersuchen um diese auszusortieren  - fixed durch gut gewähltes koordinatensystem - doch nicht fixed, ist ein
@@ -166,25 +170,34 @@ def single_vertical_var_dist(mass, distance, quad_param, steps, grid_steps, delt
 #  - fixed RK4 war SCHULD wieso ? Gute Frage - sollte neuen integrator schreiben weil euler zu langsam
 # TODO 5: DREHER IM KOORDINATEN SYSTEM: FUNKTIONIERT BISHER NUR RICHTIG WENN AX UND AY VERTAUSCHT SIND
 
-# 34 rk4
-# 6 euler
+
 if __name__ == '__main__':
     start = time.time()
     num_processes = os.cpu_count()
-
     seed_folder = init_calculation(1, .1, [0, 0, 0, 0], [0, 0, 0, 0])
-    for kk in range(20):
-        dist = 3.125
-        stepsize = 0.025/(kk+1)
+    jj = 0
+    # dist_lower = 3.138531058436214
+    # dist_upper = 3.1385310629629632
+    dist_lower = 3.1383933518005542
+    dist_upper = 3.1384210526315792
+    delta_step = (dist_upper-dist_lower)
+    dist_upper = dist_upper + 4*delta_step
+    distances = linspace(dist_lower, dist_upper, 100, dtype='float64')
+    set_printoptions(precision=16)
+    print(distances)
+
+    for kk in range(25):
         procs = []
         for ii in range(num_processes):
             p = mp.Process(target=single_vertical_var_dist,
-                           args=(1.0, dist + 2*stepsize - ii * stepsize, .1, 10 ** 1, 4, 10 ** (-4), seed_folder,))
+                           args=(1.0, distances[jj], .1, 4*10 ** 4, 4, 10 ** (-3), seed_folder,))
             procs.append(p)
+            jj += 1
         for p in procs:
             p.start()
         for p in procs:
             p.join()
-        plot_folder(seed_folder, [0, 0, pi / 2, pi / 2], 0, [.1, 1], 3,
-                    show_or_not=False, print_black_geodesics=True, d_plot=True, zoom_plot=False, plane="equatorial")
+        for p in procs:
+            p.terminate()
+    one_line_printer(seed_folder)
     print(time.time() - start)

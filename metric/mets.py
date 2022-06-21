@@ -2,7 +2,7 @@
 Metric methods for computations
 """
 from numba import jit
-from numpy import sin, cos, tan, array, zeros, float64
+from numpy import sin, cos, tan, array, zeros
 
 
 # @jit(nopython=True)
@@ -16,7 +16,7 @@ def q_metric(position, params):
     g11 = (1. - 2. * M / r)**(-q-1) * (1 + (M**2 * sin(theta)**2)/(r**2 - 2*M*r))**(-q*(2+q))
     g22 = (1. - 2. * M / r)**(-q) * (1 + (M**2 * sin(theta)**2)/(r**2 - 2*M*r))**(-q*(2+q)) * r**2
     g33 = (1. - 2. * M / r)**(-q) * r ** 2 * sin(theta) ** 2
-    g = array([float64(g00), g11, g22, g33])
+    g = [g00, g11, g22, g33]
     return g
 
 

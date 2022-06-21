@@ -126,8 +126,6 @@ def plot_equatorial_surface_line(ax):
 def two_d_plotter(dist, mass_d, quad_param_d, phi_low, phi_up, r_anzeige, zoom_plot, csv_names, csv_loc,
                   print_black_geodesics, shadow_csv, shadow_loc, the_low, the_up, seed_folder, show_or_not,
                   plane="equatorial"):
-    if plane == "meridional":
-        zoom_plot = False
     ax = plt.axes()
     if plane == "equatorial":
         photon_sphere_indicate(quad_param_d, mass_d, ax)
@@ -137,7 +135,7 @@ def two_d_plotter(dist, mass_d, quad_param_d, phi_low, phi_up, r_anzeige, zoom_p
     ax.set_ylim([-r_anzeige, r_anzeige])
     if zoom_plot:
         axins = ax.inset_axes([0.7, 0.5, 0.25, 0.25])
-    x1, x2, y1, y2 = -.1, .1, 2 * quad_param_d + 3 * mass_d - 0.1, 2 * quad_param_d + 3 * mass_d + 0.1
+    x1, x2, y1, y2 = -3.1384210526315792, -3.1383933518005542, -0.001, 0.001
     if zoom_plot:
         axins.set_xlim(x1, x2)
         axins.set_ylim(y1, y2)
